@@ -16,52 +16,29 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 import hashlib
 import gnupg
+import os
 
 POLL_INTERVAL = 1000 # time between check-ins at the tracker
 SERVER = "localhost" # testing tracker server, can't really do other trackers with 
 MSG_HASH_SIZE = 40 # Bytes
 P2P_PORT_NUMBER = 8081 # port for 
 
-gpg = gnupg.GPG(gnupghome="./client_keys/")
 messages_list = dict()
 
-try:
-    #keys = gpg.scan_keys("secring.gpg")
-    keys = 
-    if not len(keys):
-        print("No keys!")
-        raise FileNotFoundError
-    else:
-        client_private_key = keys[0]
-except FileNotFoundError:
-    client_private_key = gpg.gen_key(gpg.gen_key_input(key_type="RSA", key_length=2048, name_email="anon@nowhere"))
-    gpg.export_keys(client_private_key.fingerprint, True)
+if not os.path.exists("./keys_client/"):
+    os.makedirs("./keys_client/")
 
-print(client_private_key)
+gpg = gnupg.GPG(gnupghome="./keys_client/")
+keys = gpg.list_keys(True)
+if not len(keys):
+    print("No keys! Generating new ones...")
+    new_key = gpg.gen_key(gpg.gen_key_input(key_type="RSA", key_length=2048, name_email="anon@nowhere"))
+    gpg.export_keys(new_key.fingerprint, True)
+    client_private_key = gpg.list_keys(True)[0]
+else:
+    client_private_key = keys[0]
 
-exit()
-
-#try:
-#    with open("client_key.key", "rb") as key_file:
-#        client_private_key = serialization.load_pem_private_key(
-#            key_file.read(),
-#            password=None,
-#            backend=default_backend()
-#        )
-#except FileNotFoundError:
-#    client_private_key = rsa.generate_private_key(
-#        public_exponent=65537,
-#        key_size=2048,
-#        backend=default_backend()
-#    )
-#    with open('client_key.key', 'wb') as f:
-#        f.write(
-#            client_private_key.private_bytes(
-#                encoding=serialization.Encoding.PEM,
-#                format=serialization.PrivateFormat.PKCS8,
-#                encryption_algorithm=serialization.NoEncryption()
-#            )
-#        )
+print("Signing key fingerprint:", client_private_key["fingerprint"])
 
 ssl_context = ssl.create_default_context() # Initalize the ssl wrapper to attach to the sock
 ssl_context.load_verify_locations('server.pem') # Load the server cert bundle, TODO: proper PKI
