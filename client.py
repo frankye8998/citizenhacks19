@@ -6,6 +6,7 @@ import json
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import socket
+import re
 
 POLL_INTERVAL = 1000
 SERVER = "localhost"
@@ -14,12 +15,7 @@ SERVER = "localhost"
 P2P_PORT_NUMBER = 8081
 print("Hello world!")
 
-MAGIC_NUMBER_CLIENT = b"FRANK GAY"
-MAGIC_NUMBER_SERVER = b"SEAN. GAY"
 
-
-peer_list = set()
-peer_list.add('test.test.test.test')
 
 ssl_context = ssl.create_default_context()
 ssl_context.load_verify_locations('server.pem')
@@ -40,24 +36,23 @@ class TrackerHandler(BaseHTTPRequestHandler):
         peer_list.add(self.client_address[0])
 
 def QueryMessage(secure_sock: ssl.SSLSocket, message_id: str, buffer_size=1024):
-    secure_sock.send(MAGIC_NUMBER_CLIENT + b"2" + bytes(message_id, "utf-8"))
-    return list(map(socket.inet_ntoa, re.findall('....', secure_sock.recv(buffer_size).decode()[len(MAGIC_NUMBER_SERVER):])))
+    secure_sock.send(b"2" + bytes(message_id, "utf-8"))
+    return list(map(socket.inet_ntoa, re.findall('....', secure_sock.recv(buffer_size).hex())))
 
 
 def GetMessages(secure_sock: ssl.SSLSocket, buffer_size=1024, hash_size=32):
-    secure_sock.send(MAGIC_NUMBER_CLIENT + b"1")
-    return list(map(lambda x:x.hex(), re.findall('.'*hash_size, secure_sock.recv(buffer_size).decode()[len(MAGIC_NUMBER_SERVER):])))
+    secure_sock.send(b"1")
+    return re.findall('.'*hash_size, secure_sock.recv(buffer_size).hex())
+
 
 def main():
-    while True:
-        try:
-            with socket.create_connection((SERVER, 8080)) as connection_sock:
-                with ssl_context.wrap_socket(connection_sock, server_hostname=SERVER) as secure_sock:
-                    print(secure_sock.version())
-                    print(secure_sock.recv(1024).decode())
-            #poll = requests.get()
-            time.sleep(POLL_INTERVAL/1000)
-        except KeyboardInterrupt:
-            break
+    try:
+        with socket.create_connection((SERVER, 8080)) as connection_sock:
+            with ssl_context.wrap_socket(connection_sock, server_hostname=SERVER) as secure_sock:
+                print(GetMessages(secure_sock))
+
+                #    time.sleep(POLL_INTERVAL/1000)
+    except KeyboardInterrupt:
+        pass
 
 main()
