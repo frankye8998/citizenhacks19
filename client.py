@@ -13,6 +13,9 @@ SERVER = "localhost"
 P2P_PORT_NUMBER = 8081
 print("Hello world!")
 
+MAGIC_NUMBER_CLIENT = b"FRANK GAY"
+
+
 peer_list = set()
 peer_list.add('test.test.test.test')
 
