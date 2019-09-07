@@ -39,13 +39,13 @@ def PrepareGPG():
 
     print("Signing key fingerprint:", client_private_key["fingerprint"], "\nLength:", len(client_private_key["fingerprint"]))
 
-def PrepareSSL():
-    ssl_context = ssl.create_default_context()  # Initalize the ssl wrapper to attach to the sock
-    ssl_context.load_verify_locations('server.pem')  # Load the server cert bundle, TODO: proper PKI
+ssl_context = ssl.create_default_context()  # Initalize the ssl wrapper to attach to the sock
+ssl_context.load_verify_locations('server.pem')  # Load the server cert bundle, TODO: proper PKI
 
 print("Hello world!")
 
 def BcryptToBytes(bcrypt_string: str):
+    bcrypt_string = str(bcrypt_string)
     _, __, cost, hash = bcrypt_string.split("$")
     if not 0 < int(cost) < 256:
         raise ValueError("0 < cost < 256")
@@ -72,12 +72,14 @@ class TrackerHandler(BaseHTTPRequestHandler): # Handle requests from other peers
 
 
 def RegisterMessage(secure_sock: ssl.SSLSocket, message_id: str):
-    secure_sock.send(b"3" + BcryptToBytes(messages_id)) # Command ID 3
+    message_id = str(message_id)
+    secure_sock.send(b"3" + BcryptToBytes(message_id)) # Command ID 3
     if secure_sock.recv(1).hex() == 0x0:
         raise ValueError
 
 
 def QueryMessage(secure_sock: ssl.SSLSocket, message_id: str, buffer_size=1048576):
+    message_id = str(message_id)
     secure_sock.send(b"2" + BcryptToBytes(message_id)) # Command ID 2
     return list(map(socket.inet_ntoa, re.findall('....', secure_sock.recv(buffer_size).hex())))
 
@@ -87,20 +89,25 @@ def GetMessages(secure_sock: ssl.SSLSocket, buffer_size=1048576, hash_size=MSG_H
     return re.findall('.'*hash_size, secure_sock.recv(buffer_size).hex())
 
 
-def CreateSocket(server = SERVER):
+def CreateSocket(server = SERVER, port=8080):
     try:
-        connection_sock = socket.create_connection((server, 8080))
+        connection_sock = socket.create_connection((server, port))
         return ssl_context.wrap_socket(connection_sock, server_hostname=server)
     except ConnectionRefusedError:
         print(f"Connection refused by {server}")
 
+def GenerateID(message: str):
+    message = message
+    return bcrypt.hashpw(hashlib.sha256(bytes(message, 'utf-8')).digest(), bcrypt.gensalt())
+
 
 def SignMessage(message: str):
-    message_id = bcrypt.hashpw(hashlib.sha256(bytes(message, 'utf-8')).digest(), bcrypt.gensalt())
-    return str(gpg.sign(message, keyid = client_private_key["fingerprint"])), message_id
+    message = message
+    return str(gpg.sign(message, keyid = client_private_key["fingerprint"]))
 
 
 def QueueMessage(message: str):
+    message = str(message)
     global messages_list
     signed_message, msg_id = SignMessage(message)
     messages_list[msg_id] = signed_message
@@ -130,7 +137,7 @@ def main():
                 peer_list = QueryMessage(secure_sock, message_id)
                 chosen_peer = random.choice(peer_list)
                 print("Hash verifying")
-                message_content = requests.get(chosen_peer, data=message_id).text
+                message_content = requests.get(chosen_peer, data=message_id).content
                 while not bcrypt.checkpw(hashlib.sha256(message_content).digest(), message_id):
                     chosen_peer = random.choice(peer_list)
                     print("Hash verifying")

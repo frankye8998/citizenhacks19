@@ -15,11 +15,24 @@ def fetch_new_data(data: dict):
     sender = str(data['sender'])
     msg = str(data['msg'])
 
+class PingFive(QRunnable):
+    def run(self):
+        try:
+            pass
+            
+        except KeyboardInterrupt:
+            return
+
+
+
 class MyWidget(QWidget):
     @Slot()
     def button_clicked(self):
-        if self.msg_textbox.text().strip() != "":
-            client.QueueMessage(self.msg_textbox.text())
+        if self.msg_textbox.text().strip():
+            message_content = self.msg_textbox.text()
+            message_id = client.GenerateID(message_content)
+            print(message_id)
+            client.RegisterMessage(self.secure_sock_send, message_id)
 
             self.msg_display.append(self.msg_textbox.text().strip())
             self.msg_textbox.setText("")
@@ -28,6 +41,9 @@ class MyWidget(QWidget):
     def __init__(self):
         QWidget.__init__(self)
 
+        self.threadpool = QThreadPool() # XXX MULTITHREADING THING FOR FRANK
+        self.threadpool.start(PingFive())
+        self.secure_sock_send = client.CreateSocket(port=8083)
         # Create PySide2 Widgets
         self.setWindowTitle("Hail Mary")
         self.msg_display = QTextEdit()
@@ -51,8 +67,6 @@ class MyWidget(QWidget):
 
 
 if __name__ == "__main__":
-    client.PrepareGPG()
-    client.PrepareSSL()
     app = QApplication(sys.argv)
 
     widget = MyWidget()

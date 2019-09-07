@@ -22,6 +22,7 @@ context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)   # Inititalize encryption sys
 context.load_cert_chain('server.pem', 'server.key') # Set up public and private keys (self signed here, TODO actual PKI infrasturcture)
 
 def BcryptToBytes(bcrypt_string: str):
+    bcrypt_string = str(bcrypt_string)
     _, __, cost, hash = bcrypt_string.split("$")
     if not 0 < int(cost) < 256:
         raise ValueError("0 < cost < 256")
@@ -37,6 +38,7 @@ def BytesToBcrypt(bcrypt_bytes: bytes):
 def CommandHandler(command: str):
     """Handles the command, NOT including magic number"""
     global messages
+    command = str(command)
     if command:
         if command[0] == '2':
             return "".join(map(socket.inet_aton, messages[command[1:]]))
@@ -59,6 +61,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0) as sock:
                 conn.send(CommandHandler(conn.recv(1024).decode()))
         except KeyboardInterrupt:
             pass
-
-    
-    
