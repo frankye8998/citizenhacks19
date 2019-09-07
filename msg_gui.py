@@ -33,12 +33,13 @@ class MyWidget(QWidget):
         self.layout.addWidget(self.send_button)
         self.setLayout(self.layout)
 
-        # Add Button click Functionality
+        # Add Button click functionality
         self.send_button.clicked.connect(self.button_clicked)
     
     @Slot()
     def button_clicked(self):
         self.msg_display.append(self.msg_textbox.text())
+        self.msg_textbox.setText("")
 
 
 if __name__ == "__main__":
