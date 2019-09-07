@@ -1,11 +1,14 @@
 # TODO: Integrate into client.py when both are stable
 # TODO: Random art pfps
 
+import client
+
 import sys
 import json
 import time
 from PySide2.QtWidgets import *
 from PySide2.QtCore import *
+import threading
 
 def fetch_new_data(data: dict):
     # TODO: fetch new msgs
@@ -13,6 +16,15 @@ def fetch_new_data(data: dict):
     msg = str(data['msg'])
 
 class MyWidget(QWidget):
+    @Slot()
+    def button_clicked(self):
+        if self.msg_textbox.text().strip() != "":
+            client.QueueMessage(self.msg_textbox.text())
+
+            self.msg_display.append(self.msg_textbox.text().strip())
+            self.msg_textbox.setText("")
+        
+
     def __init__(self):
         QWidget.__init__(self)
 
@@ -33,16 +45,14 @@ class MyWidget(QWidget):
         self.layout.addWidget(self.send_button)
         self.setLayout(self.layout)
 
-        # Add Button click functionality
+        # Button click functionality
         self.send_button.clicked.connect(self.button_clicked)
-    
-    @Slot()
-    def button_clicked(self):
-        self.msg_display.append(self.msg_textbox.text())
-        self.msg_textbox.setText("")
+        self.msg_textbox.returnPressed.connect(self.button_clicked)
 
 
 if __name__ == "__main__":
+    client.PrepareGPG()
+    client.PrepareSSL()
     app = QApplication(sys.argv)
 
     widget = MyWidget()
@@ -50,3 +60,4 @@ if __name__ == "__main__":
     widget.show()
 
     sys.exit(app.exec_())
+    

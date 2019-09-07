@@ -37,12 +37,15 @@ def BytesToBcrypt(bcrypt_bytes: bytes):
 def CommandHandler(command: str):
     """Handles the command, NOT including magic number"""
     global messages
-    if command[0] == '2':
-        return "".join(map(socket.inet_aton, messages[command[1:]]))
-    elif command[0] == '1':
-        return bytes.fromhex("".join(messages.keys()))
+    if command:
+        if command[0] == '2':
+            return "".join(map(socket.inet_aton, messages[command[1:]]))
+        elif command[0] == '1':
+            return bytes.fromhex("".join(messages.keys()))
+        else:
+            raise IndexError(command[0])
     else:
-        raise IndexError(command[0])
+        return
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0) as sock:  
