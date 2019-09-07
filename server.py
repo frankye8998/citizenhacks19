@@ -19,9 +19,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0) as sock:
     sock.listen(5)  # Limit num. of connections simultaneously possible?
     with context.wrap_socket(sock, server_side=True) as ssock:
         for i in range(5): 
-            conn, addr = ssock.accept() # Begin listening for sender and msg?
+            conn, addr = ssock.accept()
             print(conn, addr) 
             print(conn.recv(1024).decode())
+            conn.send(b"Sean gay")
 
 
     

@@ -7,15 +7,10 @@ import time
 from PySide2.QtWidgets import *
 from PySide2.QtCore import *
 
-def fetch_new_msgs():
+def fetch_new_data(data: dict):
     # TODO: fetch new msgs
-    pass
-
-def get_json_sender(data: dict):
-    return str(data['sender'])
-
-def get_json_msg(data: dict):
-    return str(data['msg'])
+    sender = str(data['sender'])
+    msg = str(data['msg'])
 
 class MyWidget(QWidget):
     def __init__(self):

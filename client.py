@@ -41,6 +41,7 @@ def main():
                 with ssl_context.wrap_socket(connection_sock, server_hostname=SERVER) as secure_sock:
                     print(secure_sock.version())
                     secure_sock.send(b"Frank gay")
+                    print(secure_sock.recv(1024).decode())
             #poll = requests.get()
             time.sleep(POLL_INTERVAL/1000)
         except KeyboardInterrupt:
