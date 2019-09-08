@@ -79,7 +79,7 @@ class TrackerHandler(BaseHTTPRequestHandler): # Handle requests from other peers
         self.send_header('Content-type', 'text/x-citizenhacks') # Hey, custom MIME type!
         self.end_headers()
         message_id = self.rfile.read(int(self.headers['Content-Length']))
-        content = json.dumps({"message": messages_list[message_id.decode()]["message_content"], "message_id": message_id.decode(), "signature": messages_list[message_id.decode()]["signature"], "protocol_version": "1", "fingerprint": messages_list[message_id.decode()]["fingerprint"]})
+        content = json.dumps({"message": messages_list[message_id.decode()]["message_content"], "message_id": message_id.decode(), "signature": messages_list[message_id.decode()]["signature"], "protocol_version": "1", "fingerprint": messages_list[message_id.decode()]["fingerprint"], "pub_key": messages_list[message_id.decode()]["pub_key"]})
         return bytes(content, 'UTF-8')
     
     def do_GET(self):

@@ -52,7 +52,7 @@ class MyWidget(QWidget):
         if self.msg_textbox.text().strip():
             message_content = self.msg_textbox.text()
             message_id = client.GenerateID(message_content, client.SignMessage(message_content))
-            client.messages_list[message_id.decode()] = {"message_content": message_content, "message_id": message_id.decode(), "signature": client.SignMessage(message_content), "fingerprint": client.client_private_key["fingerprint"]}
+            client.messages_list[message_id.decode()] = {"message_content": message_content, "message_id": message_id.decode(), "signature": client.SignMessage(message_content), "fingerprint": client.client_private_key["fingerprint"], "pub_key": client.gpg.export_keys(client.client_private_key["fingerprint"])}
             print(message_id)
             #message_id = bytes(message_id, "utf-8") # HACK
             client.RegisterMessage(self.secure_sock_send, message_id)
