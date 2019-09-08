@@ -9,6 +9,8 @@ import time
 from PySide2.QtWidgets import *
 from PySide2.QtCore import *
 import threading
+import randomart
+import random
 
 def fetch_new_data(data: dict):
     # TODO: fetch new msgs
@@ -18,7 +20,19 @@ def fetch_new_data(data: dict):
 class PingFive(QRunnable):
     def run(self):
         try:
-            pass
+            secure_sock = client.CreateSocket()
+            messages_list = {msg_id: None for msg_id in client.GetMessages(secure_sock)}
+            while True:
+                upd_messages = client.GetMessages(secure_sock)
+                new_messages_ids = list(set(upd_messages) ^ set(messages_list.keys()))
+                for message_id in new_messages_ids:
+                    peer_list = client.QueryMessage(secure_sock, message_id)
+                    chosen_peer = random.choice(peer_list)
+                    while not bcrypt.checkpw(hashlib.sha256(bytes(message_json["message"] + message_json["signature"])).digest(), message_id):
+                        chosen_peer = random.choice(peer_list)
+
+                    messages_list[message_id] = {"message_content": message_json["message"], "pub_key": message_json['pub_key'], "signature": message_json['signature']}
+                time.sleep(client.POLL_INTERVAL/1000)
             
         except KeyboardInterrupt:
             return
@@ -30,7 +44,7 @@ class MyWidget(QWidget):
     def button_clicked(self):
         if self.msg_textbox.text().strip():
             message_content = self.msg_textbox.text()
-            message_id = client.GenerateID(message_content)
+            message_id = client.GenerateID(message_content, client.SignMessage(message_content))
             print(message_id)
             client.RegisterMessage(self.secure_sock_send, message_id)
 
@@ -41,7 +55,7 @@ class MyWidget(QWidget):
     def __init__(self):
         QWidget.__init__(self)
 
-        self.threadpool = QThreadPool() # XXX MULTITHREADING THING FOR FRANK
+        self.threadpool = QThreadPool() # !!! MULTITHREADING THING FOR FRANK !!!1!
         self.threadpool.start(PingFive())
         self.secure_sock_send = client.CreateSocket(port=8083)
         # Create PySide2 Widgets
@@ -52,7 +66,7 @@ class MyWidget(QWidget):
 
         # Add Settings to Widgets
         self.msg_display.setReadOnly(True)
-        self.msg_textbox.setText("example msg")
+        #self.msg_textbox.setText("example msg")
 
         # Create Layout, Add Widgets to Layout
         self.layout = QVBoxLayout()

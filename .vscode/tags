@@ -1,0 +1,87 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BaseHTTPRequestHandler	client.py	/^from http.server import BaseHTTPRequestHandler, HTTPServer$/;"	kind:namespace	line:7
+BaseHTTPRequestHandler	server.py	/^from http.server import BaseHTTPRequestHandler, HTTPServer$/;"	kind:namespace	line:3
+BcryptToBytes	client.py	/^def BcryptToBytes(bcrypt_string: str):$/;"	kind:function	line:47
+BcryptToBytes	server.py	/^def BcryptToBytes(bcrypt_string: str):$/;"	kind:function	line:26
+BytesToBcrypt	client.py	/^def BytesToBcrypt(bcrypt_bytes: bytes):$/;"	kind:function	line:54
+BytesToBcrypt	server.py	/^def BytesToBcrypt(bcrypt_bytes: bytes):$/;"	kind:function	line:33
+CommandHandler	server.py	/^def CommandHandler(command: str, send):$/;"	kind:function	line:40
+CreateSocket	client.py	/^def CreateSocket(server = SERVER, port=8080):$/;"	kind:function	line:93
+Event	client.py	/^from threading import Event$/;"	kind:namespace	line:6
+GenerateID	client.py	/^def GenerateID(message: str):$/;"	kind:function	line:100
+GetMessages	client.py	/^def GetMessages(secure_sock: ssl.SSLSocket, buffer_size=1048576, hash_size=MSG_HASH_SIZE):$/;"	kind:function	line:88
+HOST_NAME	server.py	/^HOST_NAME = "127.0.0.1" $/;"	kind:variable	line:9
+HTTPServer	client.py	/^from http.server import BaseHTTPRequestHandler, HTTPServer$/;"	kind:namespace	line:7
+HTTPServer	server.py	/^from http.server import BaseHTTPRequestHandler, HTTPServer$/;"	kind:namespace	line:3
+HandlerRegister	server.py	/^def HandlerRegister(message_id, sender_ip):$/;"	kind:function	line:55
+MSG_HASH_SIZE	client.py	/^MSG_HASH_SIZE = 40  # Bytes$/;"	kind:variable	line:19
+MyWidget	msg_gui.py	/^class MyWidget(QWidget):$/;"	kind:class	line:28
+OrderedDict	server.py	/^from collections import OrderedDict$/;"	kind:namespace	line:6
+P2P_PORT_NUMBER	client.py	/^P2P_PORT_NUMBER = 8081  # port for $/;"	kind:variable	line:20
+POLL_INTERVAL	client.py	/^POLL_INTERVAL = 1000  # time between check-ins at the tracker$/;"	kind:variable	line:17
+PORT_NUMBER	server.py	/^PORT_NUMBER = 8080$/;"	kind:variable	line:10
+PingFive	msg_gui.py	/^class PingFive(QRunnable):$/;"	kind:class	line:18
+QueryMessage	client.py	/^def QueryMessage(secure_sock: ssl.SSLSocket, message_id: str, buffer_size=1048576):$/;"	kind:function	line:82
+REG_PORT	server.py	/^REG_PORT = 8083$/;"	kind:variable	line:11
+RegisterMessage	client.py	/^def RegisterMessage(secure_sock: ssl.SSLSocket, message_id: str):$/;"	kind:function	line:75
+RegisterMessages	server.py	/^def RegisterMessages():$/;"	kind:function	line:59
+SERVER	client.py	/^SERVER = "localhost"  # testing tracker server, can't really do other trackers with $/;"	kind:variable	line:18
+SignMessage	client.py	/^def SignMessage(message: str):$/;"	kind:function	line:105
+TrackerHandler	client.py	/^class TrackerHandler(BaseHTTPRequestHandler): # Handle requests from other peers$/;"	kind:class	line:60
+__init__	msg_gui.py	/^    def __init__(self):$/;"	kind:member	line:41
+app	msg_gui.py	/^    app = QApplication(sys.argv)$/;"	kind:variable	line:70
+base64	client.py	/^import base64$/;"	kind:namespace	line:10
+bcrypt	client.py	/^import bcrypt$/;"	kind:namespace	line:11
+button_clicked	msg_gui.py	/^    def button_clicked(self):$/;"	kind:member	line:30
+client	msg_gui.py	/^import client$/;"	kind:namespace	line:4
+client.py	client.py	1;"	kind:file	line:1
+client_private_key	client.py	/^        client_private_key = gpg.list_keys(True)[0]$/;"	kind:variable	line:36
+client_private_key	client.py	/^        client_private_key = keys[0]$/;"	kind:variable	line:38
+context	mirror-socket-for_testing.py	/^context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)$/;"	kind:variable	line:4
+context	server.py	/^context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)   # Inititalize encryption system$/;"	kind:variable	line:23
+do_GET	client.py	/^    def do_GET(self):$/;"	kind:member	line:70
+fetch_new_data	msg_gui.py	/^def fetch_new_data(data: dict):$/;"	kind:function	line:13
+gnupg	client.py	/^import gnupg$/;"	kind:namespace	line:14
+gpg	client.py	/^    gpg = gnupg.GPG(gnupghome=".\/keys_client\/")$/;"	kind:variable	line:30
+handle_http	client.py	/^    def handle_http(self, status_code, path):$/;"	kind:member	line:62
+hashlib	client.py	/^import hashlib$/;"	kind:namespace	line:13
+http_thread	client.py	/^    http_thread = threading.Thread(target=httpd.serve_forever)$/;"	kind:variable	line:153
+httpd	client.py	/^    httpd = HTTPServer(("0.0.0.0", P2P_PORT_NUMBER), TrackerHandler)$/;"	kind:variable	line:152
+json	client.py	/^import json$/;"	kind:namespace	line:5
+json	msg_gui.py	/^import json$/;"	kind:namespace	line:7
+json	server.py	/^import json$/;"	kind:namespace	line:1
+keys	client.py	/^    keys = gpg.list_keys(True)$/;"	kind:variable	line:31
+main	client.py	/^def main():$/;"	kind:function	line:119
+message_dispatch_event	client.py	/^message_dispatch_event = Event()$/;"	kind:variable	line:22
+messages	server.py	/^messages = OrderedDict()$/;"	kind:variable	line:14
+messages_list	client.py	/^messages_list = dict()$/;"	kind:variable	line:24
+mirror-socket-for_testing.py	mirror-socket-for_testing.py	1;"	kind:file	line:1
+msg_gui.py	msg_gui.py	1;"	kind:file	line:1
+new_key	client.py	/^        new_key = gpg.gen_key(gpg.gen_key_input(key_type="RSA", key_length=2048, name_email="anon@nowhere"))$/;"	kind:variable	line:34
+os	client.py	/^import os$/;"	kind:namespace	line:15
+queued_message_ids	client.py	/^queued_message_ids = []$/;"	kind:variable	line:23
+random	client.py	/^import random$/;"	kind:namespace	line:12
+re	client.py	/^import re$/;"	kind:namespace	line:8
+requests	client.py	/^import requests$/;"	kind:namespace	line:1
+run	msg_gui.py	/^    def run(self):$/;"	kind:member	line:19
+server.py	server.py	1;"	kind:file	line:1
+socket	client.py	/^import socket$/;"	kind:namespace	line:2
+socket	mirror-socket-for_testing.py	/^import socket$/;"	kind:namespace	line:1
+socket	server.py	/^import socket$/;"	kind:namespace	line:4
+ssl	client.py	/^import ssl$/;"	kind:namespace	line:4
+ssl	mirror-socket-for_testing.py	/^import ssl$/;"	kind:namespace	line:2
+ssl	server.py	/^import ssl$/;"	kind:namespace	line:5
+ssl_context	client.py	/^ssl_context = ssl.create_default_context()  # Initalize the ssl wrapper to attach to the sock$/;"	kind:variable	line:42
+struct	client.py	/^import struct$/;"	kind:namespace	line:3
+sys	msg_gui.py	/^import sys$/;"	kind:namespace	line:6
+threading	client.py	/^import threading$/;"	kind:namespace	line:9
+threading	msg_gui.py	/^import threading$/;"	kind:namespace	line:11
+threading	server.py	/^import threading$/;"	kind:namespace	line:7
+time	msg_gui.py	/^import time$/;"	kind:namespace	line:8
+time	server.py	/^import time$/;"	kind:namespace	line:2
+widget	msg_gui.py	/^    widget = MyWidget()$/;"	kind:variable	line:72
