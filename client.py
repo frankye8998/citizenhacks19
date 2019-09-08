@@ -82,6 +82,14 @@ class TrackerHandler(BaseHTTPRequestHandler): # Handle requests from other peers
         self.wfile.write(response)
 
 
+httpd = HTTPServer(("0.0.0.0", P2P_PORT_NUMBER), TrackerHandler)
+httpd.socket = ssl.wrap_socket (httpd.socket,
+    keyfile="server.key",
+    certfile='server.pem',
+    server_side=True)
+http_thread = threading.Thread(target=httpd.serve_forever)
+http_thread.start()
+
 def RegisterMessage(secure_sock: ssl.SSLSocket, message_id: bytes):
     #message_id = str(message_id)
     secure_sock.send(message_id) # Command ID 3 but not w/ "3"
@@ -162,12 +170,5 @@ def main():
         return
 
 if __name__ == '__main__':
-    httpd = HTTPServer(("0.0.0.0", P2P_PORT_NUMBER), TrackerHandler)
-    httpd.socket = ssl.wrap_socket (httpd.socket,
-        keyfile="server.key",
-        certfile='server.pem',
-        server_side=True)
-    http_thread = threading.Thread(target=httpd.serve_forever)
-    http_thread.start()
     print("Running client.py")
     #main()
