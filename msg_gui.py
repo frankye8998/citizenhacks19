@@ -15,6 +15,8 @@ import bcrypt
 import hashlib
 import requests
 
+latest_message = dict()
+
 def fetch_new_data(data: dict):
     # TODO: fetch new msgs
     sender = str(data['sender'])
@@ -22,6 +24,7 @@ def fetch_new_data(data: dict):
 
 class PingFive(QRunnable):
     def run(self):
+        global latest_message
         try:
             secure_sock = client.CreateSocket()
             client.messages_list = {msg_id: None for msg_id in client.GetMessages(secure_sock)}
@@ -34,12 +37,15 @@ class PingFive(QRunnable):
                     chosen_peer = random.choice(peer_list)
                     message_json = requests.get(f"https://{chosen_peer}:8081", data=message_id, verify='./server.pem').json()
                     print(message_json)
+                    print(bytes(message_json["message"] + message_json["signature"], "utf-8"))
                     #exit()
-                    #while not bcrypt.checkpw(hashlib.sha256(bytes(message_json["message"] + message_json["signature"], "utf-8")).digest(), bytes(message_id, "utf-8")):
-                    while not bcrypt.checkpw(message_json["message"] + message_json["signature"], bytes(message_id, "utf-8")):
+                    while not bcrypt.checkpw(hashlib.sha256(bytes(message_json["message"] + message_json["signature"], "utf-8")).digest(), bytes(message_id, "utf-8")):
+                        #while not bcrypt.checkpw(bytes(message_json["message"] + message_json["signature"], "utf-8"), bytes(message_id, "utf-8")):
                         chosen_peer = random.choice(peer_list)
 
                     client.messages_list[message_id] = {"message_content": message_json["message"], "pub_key": message_json['pub_key'], "signature": message_json['signature']}
+                    latest_message = str(message_json["message"])
+                    widget.update()
                 time.sleep(client.POLL_INTERVAL/1000)
             
         except KeyboardInterrupt:
@@ -52,6 +58,7 @@ class MyWidget(QWidget):
     def button_clicked(self):
         if self.msg_textbox.text().strip():
             message_content = self.msg_textbox.text()
+            print("pineapple ", message_content, client.SignMessage(message_content))
             message_id = client.GenerateID(message_content, client.SignMessage(message_content))
             client.messages_list[message_id.decode()] = {"message_content": message_content, "message_id": message_id.decode(), "signature": client.SignMessage(message_content), "fingerprint": client.client_private_key["fingerprint"], "pub_key": client.gpg.export_keys(client.client_private_key["fingerprint"])}
             print(message_id)
@@ -60,7 +67,11 @@ class MyWidget(QWidget):
 
             self.msg_display.append(self.msg_textbox.text().strip())
             self.msg_textbox.setText("")
-        
+    
+    def update(self):
+        global latest_message
+        self.msg_display.append(latest_message)
+        latest_message = dict()
 
     def __init__(self):
         QWidget.__init__(self)

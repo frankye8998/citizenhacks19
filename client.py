@@ -129,7 +129,9 @@ def GenerateID(message: str, signature: str):
     
 
 def SignMessage(message: str):
-    return str(gpg.sign(message, keyid = client_private_key["fingerprint"]))
+    temp4 = str(gpg.sign(message, keyid = client_private_key["fingerprint"]))
+    print(temp4)
+    return temp4
 
 '''
 def QueueMessage(message: str):
