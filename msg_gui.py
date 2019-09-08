@@ -16,6 +16,7 @@ import hashlib
 import requests
 
 latest_message = dict()
+lastest_sender = ""
 
 def fetch_new_data(data: dict):
     # TODO: fetch new msgs
@@ -24,7 +25,7 @@ def fetch_new_data(data: dict):
 
 class PingFive(QRunnable):
     def run(self):
-        global latest_message
+        global latest_message, lastest_sender
         try:
             secure_sock = client.CreateSocket()
             client.messages_list = {msg_id: None for msg_id in client.GetMessages(secure_sock)}
@@ -45,6 +46,7 @@ class PingFive(QRunnable):
 
                     client.messages_list[message_id] = {"message_content": message_json["message"], "pub_key": message_json['pub_key'], "signature": message_json['signature']}
                     latest_message = str(message_json["message"])
+                    lastest_sender = str(message_json["pub_key"])[:8]
                     widget.update()
                 time.sleep(client.POLL_INTERVAL/1000)
             
@@ -65,12 +67,12 @@ class MyWidget(QWidget):
             #message_id = bytes(message_id, "utf-8") # HACK
             client.RegisterMessage(self.secure_sock_send, message_id)
 
-            self.msg_display.append(self.msg_textbox.text().strip())
+            self.msg_display.append("<YOU> " + self.msg_textbox.text().strip())
             self.msg_textbox.setText("")
     
     def update(self):
         global latest_message
-        self.msg_display.append(latest_message)
+        self.msg_display.append(f"<{lastest_sender}> {latest_message}")
         latest_message = dict()
 
     def __init__(self):
@@ -81,7 +83,7 @@ class MyWidget(QWidget):
         self.secure_sock_send = client.CreateSocket(port=8083)
         print("Created 8083")
         # Create PySide2 Widgets
-        self.setWindowTitle("Hail Mary")
+        self.setWindowTitle("SpeakEasy")
         self.msg_display = QTextEdit()
         self.msg_textbox = QLineEdit(self)
         self.send_button = QPushButton("Send")
