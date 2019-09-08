@@ -45,8 +45,8 @@ ssl_context = ssl.create_default_context()  # Initalize the ssl wrapper to attac
 ssl_context.load_verify_locations('server.pem')  # Load the server cert bundle, TODO: proper PKI
 
 ca = CertificateAuthority('Hacky Hack Hack', 'server.pem', cert_cache='./')
-filename = ca.cert_for_host(socket.gethostbyname(socket.gethostname()))
-ssl_context.load_cert_chain(filename)
+cert_filename = ca.cert_for_host(socket.gethostbyname(socket.gethostname()))
+ssl_context.load_cert_chain(cert_filename)
 
 #TODO FIX
 #ssl_context.load_cert_chain('server.pem', 'server.key')
@@ -89,8 +89,7 @@ class TrackerHandler(BaseHTTPRequestHandler): # Handle requests from other peers
 
 httpd = HTTPServer(("0.0.0.0", P2P_PORT_NUMBER), TrackerHandler)
 httpd.socket = ssl.wrap_socket (httpd.socket,
-    keyfile="server.key",
-    certfile='server.pem',
+    certfile=filename,
     server_side=True)
 http_thread = threading.Thread(target=httpd.serve_forever)
 http_thread.start()
