@@ -89,7 +89,7 @@ class TrackerHandler(BaseHTTPRequestHandler): # Handle requests from other peers
 
 httpd = HTTPServer(("0.0.0.0", P2P_PORT_NUMBER), TrackerHandler)
 httpd.socket = ssl.wrap_socket (httpd.socket,
-    certfile=filename,
+    certfile=cert_filename,
     server_side=True)
 http_thread = threading.Thread(target=httpd.serve_forever)
 http_thread.start()
