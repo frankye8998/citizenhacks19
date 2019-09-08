@@ -50,9 +50,9 @@ class MyWidget(QWidget):
         if self.msg_textbox.text().strip():
             message_content = self.msg_textbox.text()
             message_id = client.GenerateID(message_content, client.SignMessage(message_content))
-            client.messages_list[message_id] = None
+            client.messages_list[message_id.decode()] = None
             print(message_id)
-            message_id = bytes(message_id, "utf-8") # HACK
+            #message_id = bytes(message_id, "utf-8") # HACK
             client.RegisterMessage(self.secure_sock_send, message_id)
 
             self.msg_display.append(self.msg_textbox.text().strip())
