@@ -92,7 +92,7 @@ def RegisterMessage(secure_sock: ssl.SSLSocket, message_id: bytes):
 def QueryMessage(secure_sock: ssl.SSLSocket, message_id: str, buffer_size=1048576):
     message_id = str(message_id)
     secure_sock.send(b"2" + bytes(message_id, "utf-8")) # Command ID 2
-    return list(map(socket.inet_ntoa, re.findall('....', secure_sock.recv(buffer_size).hex())))
+    return secure_sock.recv(buffer_size).decode().split(",")
 
 
 def GetMessages(secure_sock: ssl.SSLSocket, buffer_size=1048576, hash_size=MSG_HASH_SIZE):
