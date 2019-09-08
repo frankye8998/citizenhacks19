@@ -5,3 +5,4 @@ keys_client/
 *.exe
 *.dll
 *.cnf
+[0-9][0-9][0-9].*.pem
