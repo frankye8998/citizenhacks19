@@ -43,6 +43,10 @@ print("Signing key fingerprint:", client_private_key["fingerprint"], "\nLength:"
 ssl_context = ssl.create_default_context()  # Initalize the ssl wrapper to attach to the sock
 ssl_context.load_verify_locations('server.pem')  # Load the server cert bundle, TODO: proper PKI
 
+ca = CertificateAuthority('Hacky Hack Hack', 'server.pem', cert_cache='./')
+filename = ca.cert_for_host(socket.gethostbyname(socket.gethostname()))
+ssl_context.load_cert_chain(filename)
+
 #TODO FIX
 #ssl_context.load_cert_chain('server.pem', 'server.key')
 
