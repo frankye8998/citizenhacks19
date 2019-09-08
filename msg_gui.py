@@ -11,6 +11,9 @@ from PySide2.QtCore import *
 import threading
 import random_art.randomart
 import random
+import bcrypt
+import hashlib
+import requests
 
 def fetch_new_data(data: dict):
     # TODO: fetch new msgs
@@ -29,6 +32,7 @@ class PingFive(QRunnable):
                 for message_id in new_messages_ids:
                     peer_list = client.QueryMessage(secure_sock, message_id)
                     chosen_peer = random.choice(peer_list)
+                    message_json = requests.get(f"{chosen_peer}:8081", data=message_id).json()
                     while not bcrypt.checkpw(hashlib.sha256(bytes(message_json["message"] + message_json["signature"])).digest(), message_id):
                         chosen_peer = random.choice(peer_list)
 
