@@ -2,3 +2,6 @@ __pycache__/
 .vscode/
 keys_client/
 .idea/
+*.exe
+*.dll
+*.cnf
