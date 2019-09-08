@@ -5,7 +5,6 @@ import socket
 import ssl
 from collections import OrderedDict
 import threading
-import certauth
 from certauth.certauth import *
 import threading
 

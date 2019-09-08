@@ -14,6 +14,7 @@ import hashlib
 import gnupg
 import os
 import time
+from certauth.certauth import *
 
 POLL_INTERVAL = 1000  # time between check-ins at the tracker
 SERVER = "192.168.49.127"  # testing tracker server, can't really do other trackers with 
