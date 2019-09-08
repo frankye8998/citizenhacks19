@@ -24,11 +24,11 @@ class PingFive(QRunnable):
     def run(self):
         try:
             secure_sock = client.CreateSocket()
-            messages_list = {msg_id: None for msg_id in client.GetMessages(secure_sock)}
+            client.messages_list = {msg_id: None for msg_id in client.GetMessages(secure_sock)}
             print("Entering loop")
             while True:
                 upd_messages = client.GetMessages(secure_sock)
-                new_messages_ids = list(set(upd_messages) ^ set(messages_list.keys()))
+                new_messages_ids = list(set(upd_messages) ^ set(client.messages_list.keys()))
                 for message_id in new_messages_ids:
                     peer_list = client.QueryMessage(secure_sock, message_id)
                     chosen_peer = random.choice(peer_list)
@@ -36,7 +36,7 @@ class PingFive(QRunnable):
                     while not bcrypt.checkpw(hashlib.sha256(bytes(message_json["message"] + message_json["signature"])).digest(), message_id):
                         chosen_peer = random.choice(peer_list)
 
-                    messages_list[message_id] = {"message_content": message_json["message"], "pub_key": message_json['pub_key'], "signature": message_json['signature']}
+                    client.messages_list[message_id] = {"message_content": message_json["message"], "pub_key": message_json['pub_key'], "signature": message_json['signature']}
                 time.sleep(client.POLL_INTERVAL/1000)
             
         except KeyboardInterrupt:
@@ -50,7 +50,7 @@ class MyWidget(QWidget):
         if self.msg_textbox.text().strip():
             message_content = self.msg_textbox.text()
             message_id = client.GenerateID(message_content, client.SignMessage(message_content))
-            client.messages_list[message_id] = message_content
+            client.messages_list[message_id] = None
             print(message_id)
             client.RegisterMessage(self.secure_sock_send, message_id)
 
