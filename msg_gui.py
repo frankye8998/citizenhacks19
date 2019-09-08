@@ -50,6 +50,7 @@ class MyWidget(QWidget):
         if self.msg_textbox.text().strip():
             message_content = self.msg_textbox.text()
             message_id = client.GenerateID(message_content, client.SignMessage(message_content))
+            client.messages_list[message_id] = message_content
             print(message_id)
             client.RegisterMessage(self.secure_sock_send, message_id)
 
