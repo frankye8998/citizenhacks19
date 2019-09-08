@@ -34,7 +34,7 @@ class PingFive(QRunnable):
                     chosen_peer = random.choice(peer_list)
                     message_json = requests.get(f"https://{chosen_peer}:8081", data=message_id, verify='./server.pem').text
                     print(message_json)
-                    exit()
+                    #exit()
                     while not bcrypt.checkpw(hashlib.sha256(bytes(message_json["message"] + message_json["signature"])).digest(), message_id):
                         chosen_peer = random.choice(peer_list)
 

@@ -104,6 +104,7 @@ def RegisterMessage(secure_sock: ssl.SSLSocket, message_id: bytes):
 def QueryMessage(secure_sock: ssl.SSLSocket, message_id: str, buffer_size=1048576):
     message_id = str(message_id)
     secure_sock.send(b"2" + bytes(message_id, "utf-8")) # Command ID 2
+    print()
     return secure_sock.recv(buffer_size).decode().split(",")
 
 
