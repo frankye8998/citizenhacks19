@@ -22,6 +22,7 @@ class PingFive(QRunnable):
         try:
             secure_sock = client.CreateSocket()
             messages_list = {msg_id: None for msg_id in client.GetMessages(secure_sock)}
+            print("Entering loop")
             while True:
                 upd_messages = client.GetMessages(secure_sock)
                 new_messages_ids = list(set(upd_messages) ^ set(messages_list.keys()))
@@ -58,6 +59,7 @@ class MyWidget(QWidget):
         self.threadpool = QThreadPool() # !!! MULTITHREADING THING FOR FRANK !!!1!
         self.threadpool.start(PingFive())
         self.secure_sock_send = client.CreateSocket(port=8083)
+        print("Created 8083")
         # Create PySide2 Widgets
         self.setWindowTitle("Hail Mary")
         self.msg_display = QTextEdit()

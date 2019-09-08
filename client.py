@@ -16,8 +16,8 @@ import os
 import time
 
 POLL_INTERVAL = 1000  # time between check-ins at the tracker
-SERVER = "127.0.0.1"  # testing tracker server, can't really do other trackers with 
-MSG_HASH_SIZE = 72  # Bytes
+SERVER = "192.168.49.127"  # testing tracker server, can't really do other trackers with 
+MSG_HASH_SIZE = 60  # Bytes
 P2P_PORT_NUMBER = 8081  # port for 
 
 message_dispatch_event = Event()
@@ -96,8 +96,9 @@ def QueryMessage(secure_sock: ssl.SSLSocket, message_id: str, buffer_size=104857
 
 
 def GetMessages(secure_sock: ssl.SSLSocket, buffer_size=1048576, hash_size=MSG_HASH_SIZE):
+    print("Getting messages")
     secure_sock.send(b"1") # Command ID 1
-    return re.findall('.'*hash_size, secure_sock.recv(buffer_size).hex())
+    return re.findall('.'*hash_size, secure_sock.recv(buffer_size).decode())
 
 
 def CreateSocket(server = SERVER, port=8080):
