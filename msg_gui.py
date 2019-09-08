@@ -32,7 +32,7 @@ class PingFive(QRunnable):
                 for message_id in new_messages_ids:
                     peer_list = client.QueryMessage(secure_sock, message_id)
                     chosen_peer = random.choice(peer_list)
-                    message_json = requests.get(f"https://{chosen_peer}:8081", data=message_id).json()
+                    message_json = requests.get(f"https://{chosen_peer}:8081", data=message_id, verify=False).json()
                     while not bcrypt.checkpw(hashlib.sha256(bytes(message_json["message"] + message_json["signature"])).digest(), message_id):
                         chosen_peer = random.choice(peer_list)
 
@@ -52,6 +52,7 @@ class MyWidget(QWidget):
             message_id = client.GenerateID(message_content, client.SignMessage(message_content))
             client.messages_list[message_id] = None
             print(message_id)
+            message_id = bytes(message_id, "utf-8") # HACK
             client.RegisterMessage(self.secure_sock_send, message_id)
 
             self.msg_display.append(self.msg_textbox.text().strip())
