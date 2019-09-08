@@ -5,8 +5,9 @@ import socket
 import ssl
 from collections import OrderedDict
 import threading
+import certauth
 
-HOST_NAME = "127.0.0.1" 
+HOST_NAME = "0.0.0.0" 
 PORT_NUMBER = 8080
 REG_PORT = 8083
 print("Hello world!")
@@ -21,7 +22,11 @@ messages = OrderedDict()
 
 
 context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)   # Inititalize encryption system
-context.load_cert_chain('server.pem', 'server.key') # Set up public and private keys (self signed here, TODO actual PKI infrasturcture)
+#context.load_cert_chain('server.pem', 'server.key') # Set up public and private keys (self signed here, TODO actual PKI infrasturcture)
+
+ca = CertificateAuthority('Hacky Hack Hack', 'server.pem', cert_cache='./')
+filename = ca.cert_for_host(socket.gethostbyname(socket.gethostname()))
+context.load_cert_chain(filename)
 
 '''def BcryptToBytes(bcrypt_string: str):
     bcrypt_string = base64.b64decode(str(bcrypt_string) + '=' * (-len(s) % 4))

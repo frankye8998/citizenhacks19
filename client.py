@@ -16,7 +16,7 @@ import os
 import time
 
 POLL_INTERVAL = 1000  # time between check-ins at the tracker
-SERVER = "localhost"  # testing tracker server, can't really do other trackers with 
+SERVER = "192.168.137.141"  # testing tracker server, can't really do other trackers with 
 MSG_HASH_SIZE = 72  # Bytes
 P2P_PORT_NUMBER = 8081  # port for 
 
@@ -39,7 +39,8 @@ else:
 
 print("Signing key fingerprint:", client_private_key["fingerprint"], "\nLength:", len(client_private_key["fingerprint"]))
 
-ssl_context = ssl.create_default_context()  # Initalize the ssl wrapper to attach to the sock
+# HACKY HACK HACK
+ssl.create_default_context()  # Initalize the ssl wrapper to attach to the sock
 ssl_context.load_verify_locations('server.pem')  # Load the server cert bundle, TODO: proper PKI
 
 #TODO FIX
@@ -167,4 +168,5 @@ if __name__ == '__main__':
         server_side=True)
     http_thread = threading.Thread(target=httpd.serve_forever)
     http_thread.start()
+    print("Running client.py")
     #main()

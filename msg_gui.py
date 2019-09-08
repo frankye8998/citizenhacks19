@@ -9,7 +9,7 @@ import time
 from PySide2.QtWidgets import *
 from PySide2.QtCore import *
 import threading
-import randomart
+import random_art.randomart
 import random
 
 def fetch_new_data(data: dict):
